@@ -34,6 +34,7 @@
 #include <QDebug>
 #include <QGraphicsWidget>
 #include <QDir>
+#include <hbmenu.h>
 
 const int gridRowCount = 1;
 
@@ -144,7 +145,7 @@ void FtuWizardActivatedState::onEntry(QEvent *event)
 void FtuWizardActivatedState::onExit(QEvent *event)
 {
     QState::onExit(event);
-    
+    mMainWindow->currentView()->takeMenu();
     disconnect(mBackAction, SIGNAL(triggered()),
                this, SLOT(handleBackEvent()));
     
@@ -160,6 +161,10 @@ void FtuWizardActivatedState::onExit(QEvent *event)
 
     disconnect(mActiveWizard, SIGNAL(infoTextUpdated(FtuWizard *, QString )),
             this, SLOT(updateInfoText(FtuWizard *, QString)));
+    
+    //disconnect from the existing existing wizard's updateMainMenu signal
+    disconnect(mActiveWizard,SIGNAL(updateMainMenu(FtuWizard *, HbMenu * )),
+            this,SLOT(updateMainMenu(FtuWizard *, HbMenu * )));
 }
 
 // ---------------------------------------------------------------------------
@@ -181,7 +186,11 @@ void FtuWizardActivatedState::setActiveWizardConnections()
 
     disconnect(mActiveWizard, SIGNAL(infoTextUpdated(FtuWizard *, QString )),
             this, SLOT(updateInfoText(FtuWizard *, QString)));
-
+    
+    //disconnect from the existing existing wizard's updateMainMenu signal
+    disconnect(mActiveWizard,SIGNAL(updateMainMenu(FtuWizard *, HbMenu * )),
+            this,SLOT(updateMainMenu(FtuWizard *, HbMenu * )));
+    
     // then connect new ones to active wizard
     connect(mActiveWizard, SIGNAL(viewChanged(FtuWizard *, QGraphicsWidget* )),
             this, SLOT(changeWizardView(FtuWizard*, QGraphicsWidget*)));
@@ -194,6 +203,10 @@ void FtuWizardActivatedState::setActiveWizardConnections()
     
     connect(mActiveWizard, SIGNAL(infoTextUpdated(FtuWizard *, QString )),
             this, SLOT(updateInfoText(FtuWizard *, QString)));
+    
+    // connect to the updateMainMenu wizard signal
+    connect(mActiveWizard,SIGNAL(updateMainMenu(FtuWizard *, HbMenu * )),
+            this,SLOT(updateMainMenu(FtuWizard *, HbMenu * )));
 }
 
 // ---------------------------------------------------------------------------
@@ -216,6 +229,22 @@ void FtuWizardActivatedState::handleBackEvent()
     {
         emit backEventTriggered();
     }    
+}
+
+
+// ---------------------------------------------------------------------------
+// FtuWizardActivatedState::updateMainMenu
+// ---------------------------------------------------------------------------
+//
+void FtuWizardActivatedState::updateMainMenu(FtuWizard * caller, HbMenu * menu)
+{
+    //check if only current wizard has emmited this signal
+    if(caller==mActiveWizard)
+        {
+            mMainWindow->currentView()->takeMenu();
+            if(menu)
+                mMainWindow->currentView()->setMenu(menu);
+        }
 }
 
 // ---------------------------------------------------------------------------
@@ -365,6 +394,7 @@ void FtuWizardActivatedState::activateWizard(const QModelIndex index)
         // check if other wizard than current is activated
         if (mActiveWizard != content()->wizard(wizardIndex))
         {
+            mMainWindow->currentView()->takeMenu();
             // first deactivate current active wizard
 		    if(mActiveWizard)
 		    {

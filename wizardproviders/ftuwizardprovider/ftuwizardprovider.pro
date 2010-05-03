@@ -54,6 +54,11 @@ symbian {
 	BLD_INF_RULES.prj_exports += \
 		"conf/ftuwizardprovider.confml	APP_LAYER_CONFML(ftuwizardprovider.confml)" \
 		"conf/ftuwizardprovider_20026F9B.crml     APP_LAYER_CRML(ftuwizardprovider_20026F9B.crml)" 
+
+
+     #Add default symbian libs required by the application (redundant/duplicate entries to be removed)
+     LIBS += -lcone -leikcore -lmediaclientaudio -leikcoctl -leiksrv -lapparc -lavkon
+     LIBS += -lefsrv -lcharconv -lws32 -lhal -lgdi -lapgrfx
 }
 
 include(ftuwizardprovider.pri)

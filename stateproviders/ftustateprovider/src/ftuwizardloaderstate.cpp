@@ -22,7 +22,7 @@
 #include <ftuwizardfactory.h>
 #include <ftuwizard.h>
 #include "ftutest_global.h"
-
+#include "ftustatecenrephandler.h"
 #include <QDebug>
 
 // ---------------------------------------------------------------------------
@@ -89,7 +89,7 @@ void FtuWizardLoaderState::onEntry(QEvent *event)
                 
                 connect(wizard, SIGNAL(wizardInitialized(FtuWizard*, bool)),
                         this, SLOT(addWizard(FtuWizard*, bool)));
-                wizard->initializeWizard();
+                wizard->initializeWizard(KCrUidFtuStateProvider, KBaseIndex + i);
         	}
         }	
     }

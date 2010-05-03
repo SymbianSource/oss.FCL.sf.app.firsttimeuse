@@ -35,6 +35,8 @@ class FtuContentService;
 class QDate;
 class FtuWizard;
 class HbAction;
+class FtuStateCenrepHandler;
+class HbMenu;
 
 /** @ingroup group_ftustateprovider
  * @brief The state where wizard menu is shown
@@ -121,11 +123,6 @@ public slots:
      */    
     void updateProgress(FtuWizard *caller, bool show, int progress);
     
-    /**
-     * Called when application has to exit
-     */  
-    void exitApp();
-    
 signals:
 
     /**
@@ -144,6 +141,9 @@ private:
 
     QStandardItemModel*                     mModel;
     HbAction*                               mExitAction;
+
+    FtuStateCenrepHandler*                  mCenrepHandler;
+    QList<bool>                             mCompletedWizardList;
 
     FTU_TEST_FRIEND_CLASS(FtuStateProviderTest)
 };

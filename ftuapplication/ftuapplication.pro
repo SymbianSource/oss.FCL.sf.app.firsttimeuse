@@ -61,6 +61,14 @@ symbian {
                          ../translations/ftuexamplewizards_en_US.qm ../translations/ftuexamplewizards_en_GB.qm
     addFiles.path = translations   
     DEPLOYMENT += icon addFiles
+
+    LIBS += -lxqsettingsmanager 
+    RSS_RULES += "hidden = KAppIsHidden;"
+
+
+     #Add default symbian libs required by the application (redundant/duplicate entries to be removed)
+     LIBS += -lcone -leikcore -lmediaclientaudio -leikcoctl -leiksrv -lapparc -lavkon
+     LIBS += -lefsrv -lcharconv -lws32 -lhal -lgdi -lapgrfx
 }
 
 win32 {

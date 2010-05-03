@@ -80,7 +80,6 @@ void FtuDefaultRuntime::handleStateMachineStarted()
 //
 void FtuDefaultRuntime::handleStateMachineStopped()
 {
-    emit stopped();
 }
 
 // ---------------------------------------------------------------------------
@@ -117,10 +116,12 @@ void FtuDefaultRuntime::createStates()
     // parallel state activates all children states
     QState* parallel = new QState(QState::ParallelStates);
     this->addState(parallel);
-    parallel->addTransition(this, SIGNAL(stopStateMachine()), finalState);
+    parallel->addTransition(this, SIGNAL(event_exit()), finalState);
     
     // root GUI state
     QState* guiRootState = new QState(parallel);
+    guiRootState->addTransition(this, SIGNAL(event_exit()), finalState);
+
     
     // root FTU state
     QState* ftuRootState = new QState(guiRootState);

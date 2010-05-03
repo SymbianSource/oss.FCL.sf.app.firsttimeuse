@@ -36,7 +36,7 @@ class HbGridView;
 class QGraphicsLinearLayout;
 class FtuContentService;
 class FtuWizard;
-
+class HbMenu;
  
 /** @ingroup group_ftustateprovider
  * @brief The state handles wizard activation and interaction.
@@ -153,6 +153,14 @@ public slots:
      * @sice S60 ?S60_version.
      */
     void activateWizard(const QModelIndex index);
+    
+    /**
+     * Called when the wizards wants to show/udpate the view options menu.
+     * @since S60 ?S60_version.
+     * @param caller the Wizard which wants to update/set the options menu
+     * @param optionsmenu pointer to the HbMenu instance describing the menu to be show
+     */   
+    void updateMainMenu(FtuWizard *, HbMenu * );
 
 signals:
         

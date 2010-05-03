@@ -65,6 +65,11 @@ symbian {
     INCLUDEPATH += $$MW_LAYER_SYSTEMINCLUDE
 
     include(ftudefaultruntimeprovider_installs_symbian.pri)
+
+     #Add default symbian libs required by the application (redundant/duplicate entries to be removed)
+     LIBS += -lcone -leikcore -lmediaclientaudio -leikcoctl -leiksrv -lapparc -lavkon
+     LIBS += -lefsrv -lcharconv -lws32 -lhal -lgdi -lapgrfx
+
 }
 
 win32 {

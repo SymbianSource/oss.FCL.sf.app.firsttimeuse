@@ -40,6 +40,7 @@ win32 {
 LIBS += -lftuwizardmodel
 LIBS += -lftuwizardprovider
 LIBS += -lfturuntimeservices
+LIBS += -lxqsettingsmanager
 
 CONFIG += debug_and_release
 
@@ -70,7 +71,14 @@ symbian {
     #include(ftustateprovider_installs_symbian.pri)
     
     BLD_INF_RULES.prj_exports += "./inc/ftustateprovider_global.h |../../inc/" \                             
-                             "./inc/ftustateprovider.h |../../inc/"
+                             "./inc/ftustateprovider.h |../../inc/" \
+                             "conf/ftustateprovider.confml            APP_LAYER_CONFML(ftustateprovider.confml)" \
+                             "conf/Ftustateprovider_20026f99.crml     APP_LAYER_CRML(Ftustateprovider_20026f99.crml)" 
+
+
+     #Add default symbian libs required by the application (redundant/duplicate entries to be removed)
+     LIBS += -lcone -leikcore -lmediaclientaudio -leikcoctl -leiksrv -lapparc -lavkon
+     LIBS += -lefsrv -lcharconv -lws32 -lhal -lgdi -lapgrfx
 }
 
 win32:include(ftustateprovider_installs_win32.pri)

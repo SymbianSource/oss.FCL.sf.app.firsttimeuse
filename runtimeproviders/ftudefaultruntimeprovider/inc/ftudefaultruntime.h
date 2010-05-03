@@ -90,7 +90,7 @@ signals:
     /**
      * Emission of this signal initiates a transition to the final state.     
      */
-    void stopStateMachine();
+    void event_exit() ;
     
 private:
 

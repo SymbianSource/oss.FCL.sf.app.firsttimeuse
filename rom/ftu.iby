@@ -42,7 +42,5 @@ file=ABI_DIR/BUILD_DIR/ftuwizardprovider.dll                SHARED_LIB_DIR/ftuwi
 // ---- ftustateprovider ------------------------------------------------------
 
 file=ABI_DIR/BUILD_DIR/ftustateprovider.dll                 SHARED_LIB_DIR/ftustateprovider.dll
-//data=/epoc32/data/z/fturesources/plugins/stateproviders/ftustateprovider.qtplugin                   fturesources/plugins/stateproviders/ftustateprovider.qtplugin
-//data=/epoc32/data/z/fturesources/plugins/stateproviders/ftustateprovider.manifest                   fturesources/plugins/stateproviders/ftustateprovider.manifest
 
 #endif //__FTU_IBY__

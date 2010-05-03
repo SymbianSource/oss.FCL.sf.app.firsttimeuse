@@ -26,12 +26,14 @@
 #include <hbicon.h>
 #include <hbinstance.h>
 #include <hblistview.h>
-
 #include <hbdocumentloader.h>
 
 #include <QStandardItemModel>
 #include <QDate>
-#include <hbaction.h>
+
+#include <xqsettingsmanager.h>
+
+#include "ftustatecenrephandler.h"
 
 const int progressCompelete = 100;
 const char* emptyLine = " ";
@@ -42,7 +44,6 @@ const char *FTUSTATEPROVIDER_DOCML = ":/xml/ftustateprovider.docml";
 const char *TOC_VIEW = "tocView";
 const char *TOC_INFOTEXT_LABEL = "tocInfoTextLabel";
 const char *TOC_LIST_VIEW = "tocListView";
-
 
 
 // ---------------------------------------------------------------------------
@@ -56,10 +57,13 @@ FtuWizardMenuState::FtuWizardMenuState(QState *parent) :
     mInfoText(NULL),
     mListView(NULL),
 	mDocumentLoader(NULL),
-    mModel(NULL)   
+    mModel(NULL)
 {
     mMainWindow = hbInstance->allMainWindows().at(0);
     mModel = new QStandardItemModel(this);
+    
+    //TODO Read number of wizards supported and init the following list
+    //mCompletedWizardList << false << false << false << false << false <<false;
 
 	mDocumentLoader = new HbDocumentLoader();
 	bool ok = false;
@@ -73,9 +77,12 @@ FtuWizardMenuState::FtuWizardMenuState(QState *parent) :
 	mMainWindow->addView(mTocView);
     // Set as initial view.
     mMainWindow->setCurrentView(mTocView);
-    mExitAction = new HbAction(Hb::QuitNaviAction, this);
-    mTocView->setNavigationAction(mExitAction);
-    QObject::connect( mExitAction, SIGNAL(triggered()), this, SLOT(exitApp()));
+    mCenrepHandler = new FtuStateCenrepHandler(NULL);
+    int registeredPlugins = mCenrepHandler->registeredPluginCount();
+    for(int counter = 0; counter < registeredPlugins; counter ++){
+        mCompletedWizardList << mCenrepHandler->getPluginInfo(counter);
+    }
+        
 }
 
 // ---------------------------------------------------------------------------
@@ -89,6 +96,7 @@ FtuWizardMenuState::~FtuWizardMenuState()
 		delete mModel;
 	}
 	delete mDocumentLoader;
+	delete mCenrepHandler;
 }
 
 // ---------------------------------------------------------------------------
@@ -124,6 +132,8 @@ void FtuWizardMenuState::onEntry(QEvent *event)
 //
 void FtuWizardMenuState::onExit(QEvent *event)
 {
+    //remove the options menu so that plugin can perform the cleanup
+    mMainWindow->currentView()->takeMenu();
     QState::onExit(event);
 }
 
@@ -229,8 +239,12 @@ void FtuWizardMenuState::createInfoText()
 //
 void FtuWizardMenuState::activateWizard(const QModelIndex index)
 {
+    //remove the main menu 
+    mMainWindow->currentView()->takeMenu();
     // Set the active wizard index
     content()->setActiveWizard(index.row());
+    FtuWizard * wizard=content()->wizard(index.row());
+    
     // signal to activated state
     emit wizardSelected();
 }
@@ -272,12 +286,16 @@ void FtuWizardMenuState::updateProgress(FtuWizard *caller, bool show,
         {         
             QDate date = wizards[index]->wizardCompletedDate();
             data << updatedAsString(date);            
+
+            XQSettingsManager settingsManager;
+            
+            if(false == mCompletedWizardList[index])
+            {
+            mCompletedWizardList[index] = true; 
+            mCenrepHandler->updatePluginInfo(index);
+            }
+
         }
         mModel->item(index)->setData(QVariant(data), Qt::DisplayRole);
     }
 }
-
-void FtuWizardMenuState::exitApp()
-    {
-    qApp->exit();
-    }

@@ -26,6 +26,8 @@
 #include <QDir>
 #include <QApplication>
 
+#include "xqsettingskey.h"
+#include "xqpublishandsubscribeutils.h"
 
 QTM_USE_NAMESPACE
 
@@ -35,6 +37,12 @@ const char* ftuRuntimeUri = "com.nokia.ftu.runtime.FtuRuntime";
 // FtuFirstTimeUse::FtuFirstTimeUse
 // ---------------------------------------------------------------------------
 //
+
+
+#include <xqpublishandsubscribeutils.h>
+#include <xqpublishandsubscribesecuritypolicy.h>
+#include <QList>
+
 FtuFirstTimeUse::FtuFirstTimeUse(QObject* aParent) : 
     QObject(aParent),
     mRuntime(NULL)
@@ -66,6 +74,14 @@ FtuFirstTimeUse::FtuFirstTimeUse(QObject* aParent) :
     }
     
     FTUTEST_FUNC_EXIT("FTU::FtuFirstTimeUse::FtuFirstTimeUse");
+     
+    const quint32 KDefaultKey = 0x00000001;
+    const qint32 KFtuUidProperty = {0x20026F95}; //SID of FirstTimeUseApplication
+
+    mSettingsManager = new XQSettingsManager(this);
+    XQPublishAndSubscribeUtils utils(*mSettingsManager);
+    XQPublishAndSubscribeSettingsKey pAndSKey(KFtuUidProperty, KDefaultKey);
+    bool err = utils.defineProperty(pAndSKey, XQSettingsManager::TypeInt);
 }
 
 // ---------------------------------------------------------------------------
@@ -109,7 +125,11 @@ void FtuFirstTimeUse::stop()
 {
     FTUTEST_FUNC_ENTRY("FTU::FtuFirstTimeUse::stop");
     
-    mRuntime->stop();
+    
+    if (mRuntime && mRuntime->isRunning()) {
+            QMetaObject::invokeMethod(mRuntime, "event_exit");
+        }
+
     
     FTUTEST_FUNC_EXIT("FTU::FtuFirstTimeUse::stop");
 }

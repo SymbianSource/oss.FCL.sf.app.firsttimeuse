@@ -53,6 +53,11 @@ LIBS += -lswinstcli
 BLD_INF_RULES.prj_exports += "./inc/fturuntimeservices_global.h |../inc/" \                             
                              "./inc/ftucontentservice.h |../inc/"
 INCLUDEPATH += $$MW_LAYER_SYSTEMINCLUDE
+
+#Add default symbian libs required by the application (redundant/duplicate entries to be removed)
+LIBS += -lcone -leikcore -lmediaclientaudio -leikcoctl -leiksrv -lapparc -lavkon
+LIBS += -lefsrv -lcharconv -lws32 -lhal -lgdi -lapgrfx
+
 }
 
 win32 {

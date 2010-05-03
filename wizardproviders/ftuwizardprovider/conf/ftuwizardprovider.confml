@@ -53,12 +53,12 @@
   </feature>
   <data>
     <KCrUidFtuWizardProvider>
-      <KFtuNumberOfWizardPlugins>5</KFtuNumberOfWizardPlugins>
-      <KFtuWizardPluginPlaceholder1>ftudatetimelocationwizard.manifest</KFtuWizardPluginPlaceholder1>
-      <KFtuWizardPluginPlaceholder2>ftuemailwizard.manifest</KFtuWizardPluginPlaceholder2>
-      <KFtuWizardPluginPlaceholder3>ftusocialmediawizard.manifest</KFtuWizardPluginPlaceholder3>
-      <KFtuWizardPluginPlaceholder4>ftudatetimewizard.manifest</KFtuWizardPluginPlaceholder4>
-      <KFtuWizardPluginPlaceholder5>dataimportftuwizard.manifest</KFtuWizardPluginPlaceholder5>
+      <KFtuNumberOfWizardPlugins>2</KFtuNumberOfWizardPlugins>
+      <KFtuWizardPluginPlaceholder1>ftudatetimewizard.manifest</KFtuWizardPluginPlaceholder1>
+      <KFtuWizardPluginPlaceholder2>dataimportftuwizard.manifest</KFtuWizardPluginPlaceholder2>
+      <KFtuWizardPluginPlaceholder3></KFtuWizardPluginPlaceholder3>
+      <KFtuWizardPluginPlaceholder4></KFtuWizardPluginPlaceholder4>
+      <KFtuWizardPluginPlaceholder5></KFtuWizardPluginPlaceholder5>
       <KFtuWizardPluginPlaceholder6></KFtuWizardPluginPlaceholder6>
       <KFtuWizardPluginPlaceholder7></KFtuWizardPluginPlaceholder7>
       <KFtuWizardPluginPlaceholder8></KFtuWizardPluginPlaceholder8>
