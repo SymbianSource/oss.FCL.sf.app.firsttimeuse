@@ -23,6 +23,7 @@
 // ---- ftuapplication --------------------------------------------------------
 
 file=ABI_DIR/BUILD_DIR/ftuapplication.exe                   PROGRAMS_DIR/ftuapplication.exe
+data=/epoc32/data/z/resource/apps/ftuapplication.r01        resource/apps/ftuapplication.rsc
 data=ZPRIVATE/10003a3f/import/apps/ftuapplication_reg.rsc   private/10003a3f/import/apps/ftuapplication_reg.rsc
 
 // ---- fturuntimeservices ----------------------------------------------------

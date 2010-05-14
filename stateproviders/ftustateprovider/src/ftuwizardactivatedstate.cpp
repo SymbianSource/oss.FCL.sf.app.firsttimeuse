@@ -92,7 +92,7 @@ FtuWizardActivatedState::FtuWizardActivatedState(QState *parent) :
 
     QString path = QDir::currentPath();
     
-    mBackAction = new HbAction(Hb::BackAction, this);
+    mBackAction = new HbAction(Hb::BackNaviAction, this);
     
 }
 
@@ -136,6 +136,11 @@ void FtuWizardActivatedState::onEntry(QEvent *event)
     setActiveWizardConnections();
 
     mActiveWizard->activateWizard();
+    
+    if (mActiveWizard->wizardSettings().mNoViews)
+    {
+        emit backEventTriggered();
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -394,7 +399,9 @@ void FtuWizardActivatedState::activateWizard(const QModelIndex index)
         // check if other wizard than current is activated
         if (mActiveWizard != content()->wizard(wizardIndex))
         {
-            mMainWindow->currentView()->takeMenu();
+            int prevWizardIndex = content()->activeWizard();
+			mMainWindow->currentView()->takeMenu();
+            
             // first deactivate current active wizard
 		    if(mActiveWizard)
 		    {
@@ -408,6 +415,15 @@ void FtuWizardActivatedState::activateWizard(const QModelIndex index)
             setActiveWizardConnections();
             // set new active wizard visible
             mActiveWizard->activateWizard();
+            
+            if (mActiveWizard->wizardSettings().mNoViews) 
+            {
+                mActiveWizard->deactivateWizard();
+                content()->setActiveWizard(prevWizardIndex);
+                mActiveWizard = content()->wizard(prevWizardIndex);
+                setActiveWizardConnections();
+                mActiveWizard->activateWizard();
+            }
         }
         
         // temp solution to skip edge indexes - start
