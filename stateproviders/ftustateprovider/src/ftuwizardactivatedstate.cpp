@@ -369,7 +369,7 @@ void FtuWizardActivatedState::constructGrid()
         QStandardItem* item = new QStandardItem();
         HbIcon icon(settings.mMenustripDefaultIcon.absoluteFilePath());
 
-        item->setBackground(QBrush(Qt::lightGray));
+//      item->setBackground(QBrush(Qt::lightGray));
         item->setData(icon, Qt::DecorationRole);
         
         QStringList data;

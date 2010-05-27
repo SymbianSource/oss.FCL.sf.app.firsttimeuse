@@ -196,7 +196,7 @@ void FtuWizardMenuState::addWizardToListModel(int aIndex)
             data << updatedAsString(date);
         }
 
-        newItem->setBackground(QBrush(Qt::lightGray));
+        //newItem->setBackground(QBrush(Qt::lightGray));
         newItem->setData(icon, Qt::DecorationRole);
         newItem->setData(QVariant(data), Qt::DisplayRole);
 
