@@ -26,7 +26,6 @@
 FTU_TEST_CLASS(FtuFirstTimeUseTest)
 
 class QStateMachine;
-class XQSettingsManager;
 
 /**
  * @ingroup group_ftuapplication
@@ -122,8 +121,6 @@ private:
      */
     QStateMachine*     mRuntime;
     
-    XQSettingsManager* mSettingsManager;
-
     FTU_TEST_FRIEND_CLASS(FtuFirstTimeUseTest)
 
 };

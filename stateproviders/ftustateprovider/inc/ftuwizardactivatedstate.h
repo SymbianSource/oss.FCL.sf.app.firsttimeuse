@@ -49,13 +49,6 @@ class HbMenu;
 class FtuWizardActivatedState : public QState
 {
     Q_OBJECT
-public: 
-    /*
-     * The plugin's display mode enumeration.
-     * FullScreen means menustrip is not shown.
-     * PartialScreen means menustrip is shown.
-     */
-    enum PluginDisplayMode{FullScreen, PartialScreen};
     
 public:
 
@@ -101,12 +94,6 @@ private:
     HbMainWindow* mainWindow();
     
     /**
-     * Creates the menustrip.
-     * @since S60 ?S60_version.
-     */   
-    void constructGrid();
-
-    /**
      * Connects signals and slots for active wizard.
      * @since S60 ?S60_version.
      */  
@@ -128,19 +115,15 @@ public slots:
     void handleBackEvent();
     
     /**
+     * Signalled when plugin emits wizardDeactivated signal.
+     * @since S60 ?S60_version.
+     */
+    void handleGotoToC();
+    
+    /**
      * @copydoc FtuWizard::onViewChanged
      */
     void changeWizardView(FtuWizard *caller, QGraphicsWidget* viewWidget);
-    
-    /**
-      * @copydoc FtuWizard::fullScreenModeRequested
-      */
-    void enableFullScreenMode(FtuWizard *caller);
-     
-    /**
-      * @copydoc FtuWizard::partialScreenModeRequested
-      */
-    void enablePartialScreenMode(FtuWizard *caller);
     
     /**
      * @copydoc FtuWizard::onInfoTextUpdated
@@ -208,11 +191,6 @@ private:
     HbAction*               mBackAction;
     
     /**
-     * The menustrip component.
-     */     
-    HbGridView*             mMenustrip;
-    
-    /**
      * Plugin's previously activated view.
      */
     QGraphicsWidget*        mPreviousView;
@@ -222,10 +200,6 @@ private:
      */
     QGraphicsWidget*        mCurrentView;
 
-    /**
-     * The Plugin's display mode.
-     */
-    PluginDisplayMode       mPluginDisplayMode;
     
     FTU_TEST_FRIEND_CLASS(FtuStateProviderTest)    
 };

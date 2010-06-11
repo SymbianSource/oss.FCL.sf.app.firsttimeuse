@@ -36,7 +36,6 @@
 #include <QDir>
 #include <hbmenu.h>
 
-const int gridRowCount = 1;
 
 const char *FTUSTATEPROVIDER_DOCML2 = ":/xml/ftustateprovider.docml";
 const char *WIZARD_VIEW = "wizardView";
@@ -67,10 +66,8 @@ FtuWizardActivatedState::FtuWizardActivatedState(QState *parent) :
     mPluginTitleLabel(NULL),
     mWizardStackedWidget(NULL),
     mBackAction(NULL),
-    mMenustrip(NULL), 
     mPreviousView(NULL), 
-    mCurrentView(NULL),
-    mPluginDisplayMode(PartialScreen) 
+    mCurrentView(NULL)
 {
     mMainWindow = hbInstance->allMainWindows().at(0);
     mDocumentLoader = new HbDocumentLoader();
@@ -123,13 +120,6 @@ void FtuWizardActivatedState::onEntry(QEvent *event)
     mActiveWizard = content()->wizard(activeIndex);
     
     mPluginView->setNavigationAction(mBackAction);
-    // Make menustrip for testing purposes.
-    if(!mMenustrip)
-    {
-        constructGrid();
-    }
-    mMenustrip->setVisible(true);
-
     connect(mBackAction, SIGNAL(triggered()),
             this, SLOT(handleBackEvent()));
 
@@ -152,22 +142,21 @@ void FtuWizardActivatedState::onExit(QEvent *event)
     QState::onExit(event);
     mMainWindow->currentView()->takeMenu();
     disconnect(mBackAction, SIGNAL(triggered()),
-               this, SLOT(handleBackEvent()));
+                   this, SLOT(handleBackEvent()));
+    
+    
+    disconnect(mActiveWizard, SIGNAL(wizardDeactivated(FtuWizard *)),
+               this, SLOT(handleGotoToC()));
     
     disconnect(mActiveWizard, SIGNAL(viewChanged(FtuWizard *, 
                                                  QGraphicsWidget* )),
                this, SLOT(changeWizardView(FtuWizard*, QGraphicsWidget*)));
     
-    disconnect(mActiveWizard, SIGNAL(fullScreenModeRequested(FtuWizard *)),
-               this, SLOT(enableFullScreenMode(FtuWizard*)));
-    
-    disconnect(mActiveWizard, SIGNAL(partialScreenModeRequested(FtuWizard * )),
-               this, SLOT(enablePartialScreenMode(FtuWizard*)));
 
     disconnect(mActiveWizard, SIGNAL(infoTextUpdated(FtuWizard *, QString )),
             this, SLOT(updateInfoText(FtuWizard *, QString)));
     
-    //disconnect from the existing existing wizard's updateMainMenu signal
+    //disconnect from the existing wizard's updateMainMenu signal
     disconnect(mActiveWizard,SIGNAL(updateMainMenu(FtuWizard *, HbMenu * )),
             this,SLOT(updateMainMenu(FtuWizard *, HbMenu * )));
 }
@@ -179,16 +168,13 @@ void FtuWizardActivatedState::onExit(QEvent *event)
 void FtuWizardActivatedState::setActiveWizardConnections()
 {
     // first disconnect possible old connections with active wizard
+    disconnect(mActiveWizard, SIGNAL(wizardDeactivated(FtuWizard *)),
+                   this, SLOT(handleGotoToC()));
+    
     disconnect(mActiveWizard, SIGNAL(viewChanged(FtuWizard *, 
                                                  QGraphicsWidget* )),
                this, SLOT(changeWizardView(FtuWizard*, QGraphicsWidget*)));
     
-    disconnect(mActiveWizard, SIGNAL(fullScreenModeRequested(FtuWizard *)),
-               this, SLOT(enableFullScreenMode(FtuWizard*)));
-    
-    disconnect(mActiveWizard, SIGNAL(partialScreenModeRequested(FtuWizard * )),
-               this, SLOT(enablePartialScreenMode(FtuWizard*)));
-
     disconnect(mActiveWizard, SIGNAL(infoTextUpdated(FtuWizard *, QString )),
             this, SLOT(updateInfoText(FtuWizard *, QString)));
     
@@ -200,18 +186,15 @@ void FtuWizardActivatedState::setActiveWizardConnections()
     connect(mActiveWizard, SIGNAL(viewChanged(FtuWizard *, QGraphicsWidget* )),
             this, SLOT(changeWizardView(FtuWizard*, QGraphicsWidget*)));
     
-    connect(mActiveWizard, SIGNAL(fullScreenModeRequested(FtuWizard *)),
-            this, SLOT(enableFullScreenMode(FtuWizard*)));
-    
-    connect(mActiveWizard, SIGNAL(partialScreenModeRequested(FtuWizard * )),
-            this, SLOT(enablePartialScreenMode(FtuWizard*)));
-    
     connect(mActiveWizard, SIGNAL(infoTextUpdated(FtuWizard *, QString )),
             this, SLOT(updateInfoText(FtuWizard *, QString)));
     
     // connect to the updateMainMenu wizard signal
     connect(mActiveWizard,SIGNAL(updateMainMenu(FtuWizard *, HbMenu * )),
             this,SLOT(updateMainMenu(FtuWizard *, HbMenu * )));
+    
+    connect(mActiveWizard, SIGNAL(wizardDeactivated(FtuWizard *)),
+                   this, SLOT(handleGotoToC()));
 }
 
 // ---------------------------------------------------------------------------
@@ -236,6 +219,10 @@ void FtuWizardActivatedState::handleBackEvent()
     }    
 }
 
+void FtuWizardActivatedState::handleGotoToC()
+    {
+    emit backEventTriggered();
+    }
 
 // ---------------------------------------------------------------------------
 // FtuWizardActivatedState::updateMainMenu
@@ -281,45 +268,10 @@ void FtuWizardActivatedState::changeWizardView(FtuWizard *caller,
             // temp solution to skip edge indexes - start
             if (index == 0) { index++; }
             if (index == wizards.count()-1) { index--; }
-            // temp solution to skip edge indexes - end  
-                      
-            // create model index for active wizard
-            QModelIndex modelIndex = mMenustrip->model()->index(index, 0);
-            // scroll to correct position in menustrip
-            HbAbstractItemView::ScrollHint hint = HbAbstractItemView::PositionAtCenter;
-            mMenustrip->scrollTo(modelIndex, hint);
         }        
     }
 }
 
-// ---------------------------------------------------------------------------
-// FtuWizardActivatedState::enableFullScreenMode
-// ---------------------------------------------------------------------------
-//
-void FtuWizardActivatedState::enableFullScreenMode(FtuWizard *caller)
-{
-    if(caller == mActiveWizard)
-    {
-        mPluginDisplayMode = FullScreen;
-        // Remove menustrip
-		mMenustrip->setVisible(false);
-        caller->resizeWizard(calculateWizardGeometry()); 
-    }    
-}
-
-// ---------------------------------------------------------------------------
-// FtuWizardActivatedState::enablePartialScreenMode
-// ---------------------------------------------------------------------------
-//
-void FtuWizardActivatedState::enablePartialScreenMode(FtuWizard *caller)
-{
-    if(caller == mActiveWizard)
-    {
-        mPluginDisplayMode = PartialScreen;
-        mMenustrip->setVisible(true);
-        caller->resizeWizard(calculateWizardGeometry());
-    }
-}
 
 // ---------------------------------------------------------------------------
 // FtuWizardActivatedState::updateInfoText
@@ -341,49 +293,6 @@ void FtuWizardActivatedState::updateInfoText(FtuWizard *caller,
 HbMainWindow* FtuWizardActivatedState::mainWindow()
 {
     return hbInstance->allMainWindows().at(0);
-}
-
-// ---------------------------------------------------------------------------
-// FtuWizardActivatedState::constructGrid
-// ---------------------------------------------------------------------------
-//
-void FtuWizardActivatedState::constructGrid()
-{
-    // fetch grid view from docml
-    mMenustrip = qobject_cast<HbGridView *>(mDocumentLoader->findWidget(WIZARD_GRID_VIEW));
-    // set row amount for grid
-    mMenustrip->setRowCount(gridRowCount);
-
-    mMenustrip->setScrollDirections(Qt::Horizontal);
-
-    FtuContentService* ftuContentService = content();
-    // get wizards
-    QList<FtuWizard*> wizards = ftuContentService->wizards();
-    
-    QStandardItemModel* model = new QStandardItemModel(this);
-    
-    for(int i = 0 ; i < wizards.size() ; ++i)
-    {
-        // get wizard settings
-        const FtuWizardSetting& settings = wizards.at(i)->wizardSettings();
-        QStandardItem* item = new QStandardItem();
-        HbIcon icon(settings.mMenustripDefaultIcon.absoluteFilePath());
-
-//      item->setBackground(QBrush(Qt::lightGray));
-        item->setData(icon, Qt::DecorationRole);
-        
-        QStringList data;
-        data << settings.mMenustripLabel;
-        
-        item->setData(QVariant(data), Qt::DisplayRole);
-
-        model->appendRow(item);
-    }
-    // set above defined model for menustrip
-    mMenustrip->setModel(model);
-
-    connect(mMenustrip, SIGNAL(activated(const QModelIndex)),
-            this, SLOT(activateWizard(const QModelIndex)));
 }
 
 // ---------------------------------------------------------------------------
@@ -425,16 +334,6 @@ void FtuWizardActivatedState::activateWizard(const QModelIndex index)
                 mActiveWizard->activateWizard();
             }
         }
-        
-        // temp solution to skip edge indexes - start
-        if (wizardIndex == 0) { wizardIndex++; }
-        if (wizardIndex == content()->wizards().count()-1) { wizardIndex--; }
-        QModelIndex modelIndex = mMenustrip->model()->index(wizardIndex, 0);
-        // temp solution to skip edge indexes - end         
-              
-        HbAbstractItemView::ScrollHint hint = HbAbstractItemView::PositionAtCenter;
-        // scroll to correct position in menustrip
-        mMenustrip->scrollTo(modelIndex, hint);
     }
 }
 
@@ -446,17 +345,7 @@ QRectF FtuWizardActivatedState::calculateWizardGeometry()
 {
 	QRectF widgetRect = mWizardStackedWidget->geometry();
 	QRectF pluginRect = mPluginView->geometry();	
-    if(mPluginDisplayMode == FullScreen)
-    {		
-		pluginRect.setSize(QSizeF(widgetRect.width(),
-								  (widgetRect.height() +
-						           mMenustrip->geometry().height())));
-    }
-	else
-	{	
-		pluginRect.setSize(QSizeF(widgetRect.width(),
-			                      widgetRect.height()));	
-	}
-
+	pluginRect.setSize(QSizeF(widgetRect.width(),
+	                                widgetRect.height()));
     return pluginRect;
 }
