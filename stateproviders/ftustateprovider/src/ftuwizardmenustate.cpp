@@ -171,6 +171,7 @@ QString FtuWizardMenuState::updatedAsString(const QDate& date) const
 //
 void FtuWizardMenuState::addWizardToListModel(int aIndex)
 {    
+
     WMS_LOG << "::addWizardToListModel idx : " << aIndex;
     FtuContentService* ftuContentService = content();
 
@@ -181,9 +182,13 @@ void FtuWizardMenuState::addWizardToListModel(int aIndex)
         connect(addedWizard, SIGNAL(progressUpdated(FtuWizard *, bool, int)), 
                 this, SLOT(updateProgress(FtuWizard *, bool, int)));
 
-    	const FtuWizardSetting& settings = addedWizard->wizardSettings();
-	    QStandardItem* newItem = new QStandardItem();
-	    HbIcon icon (settings.mTocDefaultIcon.absoluteFilePath());
+        const FtuWizardSetting& settings = addedWizard->wizardSettings();
+        QStandardItem* newItem = new QStandardItem();
+        QList<QVariant> iconList;
+        HbIcon icon (settings.mTocDefaultIcon.absoluteFilePath());
+        iconList.append(icon);
+        HbIcon rightIcon(QString(qtTrId("qtg_small_tick")));
+        
         QStringList data;
         data << settings.mTocLabel;
         QDate date = addedWizard->wizardCompletedDate();
@@ -193,11 +198,11 @@ void FtuWizardMenuState::addWizardToListModel(int aIndex)
         }
         else
         {
+            iconList.append(rightIcon);
             data << updatedAsString(date);
         }
 
-        //newItem->setBackground(QBrush(Qt::lightGray));
-        newItem->setData(icon, Qt::DecorationRole);
+        newItem->setData(iconList, Qt::DecorationRole);
         newItem->setData(QVariant(data), Qt::DisplayRole);
 
         mModel->appendRow(newItem);        
@@ -272,7 +277,11 @@ void FtuWizardMenuState::updateProgress(FtuWizard *caller, bool show,
     if(index != -1)
     {  
         QStringList data;
-        data << wizards[index]->wizardSettings().mTocLabel;           
+        data << wizards[index]->wizardSettings().mTocLabel;
+        QList<QVariant> iconList;
+        HbIcon icon (wizards[index]->wizardSettings().mTocDefaultIcon.absoluteFilePath());
+        iconList.append(icon);
+        HbIcon rightIcon(QString(qtTrId("qtg_small_tick")));
         
         if(progress < progressCompelete)
         {
@@ -285,7 +294,9 @@ void FtuWizardMenuState::updateProgress(FtuWizard *caller, bool show,
         else
         {         
             QDate date = wizards[index]->wizardCompletedDate();
-            data << updatedAsString(date);            
+            data << updatedAsString(date);
+
+            iconList.append(rightIcon);
 
             XQSettingsManager settingsManager;
             
@@ -297,5 +308,6 @@ void FtuWizardMenuState::updateProgress(FtuWizard *caller, bool show,
 
         }
         mModel->item(index)->setData(QVariant(data), Qt::DisplayRole);
+        mModel->item(index)->setData(iconList, Qt::DecorationRole);
     }
 }
