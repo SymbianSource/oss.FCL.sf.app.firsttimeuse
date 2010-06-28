@@ -26,7 +26,7 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QDebug>
-
+#include "ftuwizardprovider_global.h"
 #ifdef Q_OS_SYMBIAN
 
 #include <XQSettingsManager> // for reading cenrep keys
@@ -70,7 +70,7 @@ QStringList FtuManifestParser::parsePluginList(const QString& manifestPath)
         QString path = driveLetter + manifestPath;
         if(QDir(path).exists())
         {
-            qDebug() << "ftu:: append to path list: " << path;
+            QDEBUG("ftu:: append to path list: " << path;)
             pathList << path;
         }
     }      
@@ -87,21 +87,21 @@ QStringList FtuManifestParser::parsePluginList(const QString& manifestPath)
         dir.setNameFilters(filesToRead);
         QStringList entries = dir.entryList(filesToRead, QDir::Files);
     
-        qDebug() << "ftu: Configured manifest file count " 
+        QDEBUG("ftu: Configured manifest file count " 
                  << filesToRead.count()
-                 << " found manifest files from system " << entries.count();
+                 << " found manifest files from system " << entries.count();)
         
         // Go through the configured list and find the manifest files.
         for(int j=0; j < filesToRead.count() ; ++j)
         {
             int index = entries.indexOf(filesToRead[j]);
-            qDebug() << "ftu:reading manifest file from "<< index;
+            QDEBUG("ftu:reading manifest file from "<< index;)
             if(index > -1 && index <= entries.count())
             {
                 QString fileName = entries[index]; 
-                qDebug() << "ftu:: loading from manifest file: " << fileName;
+                QDEBUG("ftu:: loading from manifest file: " << fileName;)
                 QString path = loadFromXml(dir.absoluteFilePath(fileName));
-                qDebug() << "ftu:: path from manifest: " << path;
+                QDEBUG("ftu:: path from manifest: " << path;)
                 if(!path.isEmpty())
                 {
                     dllNameList << path;
@@ -132,13 +132,13 @@ QStringList FtuManifestParser::readManifestFilesFromConfig()
     int numberOfPlugins = settingsManager->readItemValue(
                                               numberOfPluginsKey).toInt(&ok);
 
-    qDebug() << "Ftu:FtuManifestParser reading the nbr of plugins resulted: "
-             << ok;
+    QDEBUG("Ftu:FtuManifestParser reading the nbr of plugins resulted: "
+             << ok;)
     
     if(ok)
     {
-        qDebug() << "Ftu:reading config for " << numberOfPlugins 
-                 << " plugins";
+    QDEBUG("Ftu:reading config for " << numberOfPlugins 
+                 << " plugins";)
         
         
         for(int i=1; i <= numberOfPlugins ; ++i)
@@ -149,7 +149,7 @@ QStringList FtuManifestParser::readManifestFilesFromConfig()
             
             QString file = settingsManager->readItemValue(fileKey, 
                                    XQSettingsManager::TypeString).toString();
-            qDebug() << "Ftu:Reading filename from conf :" << file;            
+            QDEBUG("Ftu:Reading filename from conf :" << file;)            
             filesFromConf << file;
         }
     }
@@ -172,12 +172,12 @@ QStringList FtuManifestParser::readManifestFilesFromConfig()
 QString FtuManifestParser::loadFromXml(const QString& aFileName)
 {
 
-    qDebug() << "ftu:: ManifestParser::loadFromXml " << aFileName;
+    QDEBUG("ftu:: ManifestParser::loadFromXml " << aFileName;)
     QFile file(aFileName);
     
     if(!file.exists())
     {
-        qDebug() << "ftu: file does not exist";
+        QDEBUG("ftu: file does not exist";)
         return QString();
     }
 
@@ -190,7 +190,7 @@ QString FtuManifestParser::loadFromXml(const QString& aFileName)
     QDomElement element = document.documentElement();
     if(element.tagName() != "plugin")
     {
-        qDebug() << "ftu: Tag name plugin not found";
+        QDEBUG("ftu: Tag name plugin not found";)
         return QString();
     }
 
@@ -200,7 +200,7 @@ QString FtuManifestParser::loadFromXml(const QString& aFileName)
     {
         element = plugins.at(i).toElement();
         QString attr = parseAttribute(element, "library");
-        qDebug() << "ftu::parsed attr " << attr;
+        QDEBUG("ftu::parsed attr " << attr;)
         return attr;
     }
     return QString();
@@ -217,7 +217,7 @@ QString FtuManifestParser::parseAttribute(QDomElement& element,
     QDomAttr attribute = element.attributeNode(attributeName);
     if(attribute.isNull() || attribute.value().isEmpty())
     {
-        qDebug() << "ftu: attribute not parsed [attr name]" << attributeName;
+        QDEBUG("ftu: attribute not parsed [attr name]" << attributeName;)
         return QString();
     }
 

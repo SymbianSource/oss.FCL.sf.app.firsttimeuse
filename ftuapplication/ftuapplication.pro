@@ -36,7 +36,7 @@ MOBILITY = serviceframework
 
 CONFIG += hb    
 CONFIG += console
-
+#DEFINES += LOGGING
 nft:DEFINES += NFT
 
 DEPENDPATH += . \

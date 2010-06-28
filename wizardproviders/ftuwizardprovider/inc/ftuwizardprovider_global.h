@@ -32,5 +32,11 @@
     #endif	
 #endif
 
+#ifdef LOGGING
+#define QDEBUG(a)   qDebug() <<a
+#else
+#define QDEBUG(a)  
+#endif //LOGGING
+
 
 #endif // FTUWIZARDPROVIDER_GLOBAL

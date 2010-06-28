@@ -19,6 +19,13 @@
 #ifndef FTU_RUNTIMES_DEFAULTRUNTIME_H
 #define FTU_RUNTIMES_DEFAULTRUNTIME_H
 
+#ifdef LOGGING
+#define QDEBUG(a)   qDebug() <<a
+#else
+#define QDEBUG(a)  
+#endif //LOGGING
+
+
 #include "ftutest_global.h"
 #include <QHash>
 #include <QStateMachine>

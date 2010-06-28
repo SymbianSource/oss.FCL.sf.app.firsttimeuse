@@ -23,6 +23,12 @@
 
 #include <QObject>
 
+#ifdef LOGGING
+#define QDEBUG(a)   qDebug() <<a
+#else
+#define QDEBUG(a)  
+#endif //LOGGING
+
 FTU_TEST_CLASS(FtuFirstTimeUseTest)
 
 class QStateMachine;

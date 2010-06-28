@@ -17,7 +17,7 @@
 TEMPLATE = lib
 
 DEFINES += FTUSTATEPROVIDER_LIB
-
+#DEFINES += LOGGING
 
 symbian {
     CONFIG(debug, debug|release) {
