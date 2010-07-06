@@ -43,7 +43,7 @@ FtuFirstTimeUse::FtuFirstTimeUse(QObject* aParent) :
     QObject(aParent),
     mRuntime(NULL)
 {  
-    FTUTEST_FUNC_ENTRY("FTU::FtuFirstTimeUse::FtuFirstTimeUse");
+    QDEBUG("FTU::FtuFirstTimeUse::FtuFirstTimeUse");
     
     registerServicePlugins();
 
@@ -52,8 +52,8 @@ FtuFirstTimeUse::FtuFirstTimeUse(QObject* aParent) :
     QList<QServiceInterfaceDescriptor> interfaces = manager.findInterfaces(
                                                                     filter);
     
-    qDebug() << "ftu: found " << interfaces.count() 
-             << " instances of runtime";
+    QDEBUG("ftu: found " << interfaces.count() 
+             << " instances of runtime";)
     
     if(interfaces.count() > 0){
         mRuntime = (QStateMachine*)(manager.loadInterface(
@@ -69,7 +69,7 @@ FtuFirstTimeUse::FtuFirstTimeUse(QObject* aParent) :
         connect(mRuntime, SIGNAL(faulted()), SLOT(handleRuntimeFaulted()));    
     }
     
-    FTUTEST_FUNC_EXIT("FTU::FtuFirstTimeUse::FtuFirstTimeUse");
+    QDEBUG("FTU::FtuFirstTimeUse::FtuFirstTimeUse");
      
 }
 
@@ -95,7 +95,7 @@ FtuFirstTimeUse::~FtuFirstTimeUse()
 //
 void FtuFirstTimeUse::start()
 {
-    FTUTEST_FUNC_ENTRY("FTU::FtuFirstTimeUse::start");
+    QDEBUG("FTU::FtuFirstTimeUse::start");
     
     if(mRuntime) {
         mRuntime->start();
@@ -103,7 +103,7 @@ void FtuFirstTimeUse::start()
         emit exit();
     }
     
-    FTUTEST_FUNC_EXIT("FTU::FtuFirstTimeUse::start");
+    QDEBUG("FTU::FtuFirstTimeUse::start");
 }
 
 // ---------------------------------------------------------------------------
@@ -112,7 +112,7 @@ void FtuFirstTimeUse::start()
 //
 void FtuFirstTimeUse::stop()
 {
-    FTUTEST_FUNC_ENTRY("FTU::FtuFirstTimeUse::stop");
+    QDEBUG("FTU::FtuFirstTimeUse::stop");
     
     
     if (mRuntime && mRuntime->isRunning()) {
@@ -120,7 +120,7 @@ void FtuFirstTimeUse::stop()
         }
 
     
-    FTUTEST_FUNC_EXIT("FTU::FtuFirstTimeUse::stop");
+    QDEBUG("FTU::FtuFirstTimeUse::stop");
 }
 
 // ---------------------------------------------------------------------------
@@ -154,7 +154,7 @@ void FtuFirstTimeUse::handleRuntimeFaulted()
 //
 void FtuFirstTimeUse::registerServicePlugins()
 {
-    FTUTEST_FUNC_ENTRY("FTU::FtuFirstTimeUse::registerServicePlugins()");
+    QDEBUG("FTU::FtuFirstTimeUse::registerServicePlugins()");
     QStringList pluginPaths;
 
     pluginPaths << "fturesources/plugins";
@@ -176,7 +176,7 @@ void FtuFirstTimeUse::registerServicePlugins()
             registerServicePlugins(pluginPath);
         }
     }
-    FTUTEST_FUNC_EXIT("FTU::FtuFirstTimeUse::registerServicePlugins()");
+    QDEBUG("FTU::FtuFirstTimeUse::registerServicePlugins()");
 }
 
 // ---------------------------------------------------------------------------
@@ -185,8 +185,8 @@ void FtuFirstTimeUse::registerServicePlugins()
 //
 void FtuFirstTimeUse::registerServicePlugins(const QString &root)
 {
-    FTUTEST_FUNC_ENTRY("FTU::FtuFirstTimeUse::registerServicePlugins(const QString &)");
-    qDebug() << "FTU: root: " << root;
+    QDEBUG("FTU::FtuFirstTimeUse::registerServicePlugins(const QString &)");
+    QDEBUG("FTU: root: " << root;)
     QDir dir = QDir(root);
     QFileInfoList fileInfos = dir.entryInfoList(QDir::AllDirs | QDir::NoDotAndDotDot);
 
@@ -199,13 +199,13 @@ void FtuFirstTimeUse::registerServicePlugins(const QString &root)
     if (!fileInfos.isEmpty()) {
         //Plugin dll and xml are in the same directory
         QApplication::addLibraryPath(root);
-        qDebug() << QString("FTU::FtuFirstTimeUse::registerServicePlugins - Directory added to application's library paths: ")
-                 << root;
+        QDEBUG("FTU::FtuFirstTimeUse::registerServicePlugins - Directory added to application's library paths: "
+                 << root;)
         QServiceManager manager;
         foreach(QFileInfo fileInfo, fileInfos) {
             manager.addService(fileInfo.absoluteFilePath());
-            qDebug() << QString("FTU::FtuFirstTimeUse::registerServicePlugins - Plugin registered: ") + fileInfo.fileName();
+            QDEBUG("FTU::FtuFirstTimeUse::registerServicePlugins - Plugin registered: " << fileInfo.fileName();)
         }
     }
-    FTUTEST_FUNC_EXIT("FTU::FtuFirstTimeUse::registerServicePlugins(const QString &)");
+    QDEBUG("FTU::FtuFirstTimeUse::registerServicePlugins(const QString &)");
 }

@@ -19,7 +19,7 @@
 #include "ftuwizardmenustate.h"
 #include "ftucontentservice.h"
 #include <ftuwizard.h>
-
+#include "ftustateprovider_global.h"
 #include <hbmainwindow.h>
 #include <hbview.h>
 #include <hblabel.h>
@@ -30,15 +30,13 @@
 
 #include <QStandardItemModel>
 #include <QDate>
-
+#include <QTime>
 #include <xqsettingsmanager.h>
 
 #include "ftustatecenrephandler.h"
 
 const int progressCompelete = 100;
 const char* emptyLine = " ";
-
-#define WMS_LOG qDebug() << "ftu:FtuWizardMenuState"
 
 const char *FTUSTATEPROVIDER_DOCML = ":/xml/ftustateprovider.docml";
 const char *TOC_VIEW = "tocView";
@@ -62,17 +60,14 @@ FtuWizardMenuState::FtuWizardMenuState(QState *parent) :
     mMainWindow = hbInstance->allMainWindows().at(0);
     mModel = new QStandardItemModel(this);
     
-    //TODO Read number of wizards supported and init the following list
-    //mCompletedWizardList << false << false << false << false << false <<false;
-
-	mDocumentLoader = new HbDocumentLoader();
+    mDocumentLoader = new HbDocumentLoader();
 	bool ok = false;
 	mDocumentLoader->load(FTUSTATEPROVIDER_DOCML, &ok);
 	QGraphicsWidget *widget = mDocumentLoader->findWidget(TOC_VIEW);
 	Q_ASSERT_X(ok && (widget != 0), "ftustateprovider", "invalid DocML file");
 	mTocView = qobject_cast<HbView*>(widget);
 
-    mTocView->setTitle(qtTrId("txt_ftu_title_setup"));
+	mTocView->setTitle(qtTrId("txt_long_caption_FTU_widget"));
 
 	mMainWindow->addView(mTocView);
     // Set as initial view.
@@ -105,7 +100,7 @@ FtuWizardMenuState::~FtuWizardMenuState()
 //
 void FtuWizardMenuState::onEntry(QEvent *event)
 {    
-    WMS_LOG << "::onEntry";
+    QDEBUG("FtuWizardMenuState::onEntry";)
     QState::onEntry(event);
 
     if(!mInfoText)
@@ -172,7 +167,7 @@ QString FtuWizardMenuState::updatedAsString(const QDate& date) const
 void FtuWizardMenuState::addWizardToListModel(int aIndex)
 {    
 
-    WMS_LOG << "::addWizardToListModel idx : " << aIndex;
+    QDEBUG("FtuWizardMenuState::addWizardToListModel idx : " << aIndex;)
     FtuContentService* ftuContentService = content();
 
     FtuWizard* addedWizard = ftuContentService->wizard(aIndex);
@@ -185,7 +180,7 @@ void FtuWizardMenuState::addWizardToListModel(int aIndex)
         const FtuWizardSetting& settings = addedWizard->wizardSettings();
         QStandardItem* newItem = new QStandardItem();
         QList<QVariant> iconList;
-        HbIcon icon (settings.mTocDefaultIcon.absoluteFilePath());
+        HbIcon icon (settings.mTocDefaultIcon.filePath() );
         iconList.append(icon);
         HbIcon rightIcon(QString(qtTrId("qtg_small_tick")));
         
@@ -198,6 +193,7 @@ void FtuWizardMenuState::addWizardToListModel(int aIndex)
         }
         else
         {
+            //Plugin has already completed, Append tick mark on right side
             iconList.append(rightIcon);
             data << updatedAsString(date);
         }
@@ -225,6 +221,7 @@ void FtuWizardMenuState::createTocList()
                 SLOT(activateWizard(const QModelIndex)));
 
         mListView->setModel(mModel);
+        QDEBUG("FtuWizardMenuState.cpp Model is set"<<__FUNCTION__<<"~~~~~~~"<<QTime::currentTime().toString("hh:mm:ss.zzz");)
     }
 }
 
@@ -235,7 +232,7 @@ void FtuWizardMenuState::createTocList()
 void FtuWizardMenuState::createInfoText()
 {
     mInfoText = qobject_cast<HbLabel *>(mDocumentLoader->findWidget(TOC_INFOTEXT_LABEL));                               
-    mInfoText->setPlainText(qtTrId("txt_ftu_subtitle_toc"));
+    mInfoText->setPlainText(qtTrId("txt_ftu_subhead_select_setting_you_want_to_edit"));
 }
 
 // ---------------------------------------------------------------------------
@@ -270,7 +267,7 @@ void FtuWizardMenuState::updateProgress(FtuWizard *caller, bool show,
     {
         if(caller == wizards[i])
         {
-            WMS_LOG << "::updateProgress wizard found at: " << i;
+            QDEBUG("::updateProgress wizard found at: " << i;)
             index = i;
         }
     }
@@ -279,7 +276,7 @@ void FtuWizardMenuState::updateProgress(FtuWizard *caller, bool show,
         QStringList data;
         data << wizards[index]->wizardSettings().mTocLabel;
         QList<QVariant> iconList;
-        HbIcon icon (wizards[index]->wizardSettings().mTocDefaultIcon.absoluteFilePath());
+        HbIcon icon (wizards[index]->wizardSettings().mTocDefaultIcon.filePath());
         iconList.append(icon);
         HbIcon rightIcon(QString(qtTrId("qtg_small_tick")));
         
@@ -296,6 +293,7 @@ void FtuWizardMenuState::updateProgress(FtuWizard *caller, bool show,
             QDate date = wizards[index]->wizardCompletedDate();
             data << updatedAsString(date);
 
+            //Plugin has completed 100%, Append tick mark on right side
             iconList.append(rightIcon);
 
             XQSettingsManager settingsManager;

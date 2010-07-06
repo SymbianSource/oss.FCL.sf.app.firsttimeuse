@@ -26,7 +26,7 @@
 #include <QState>
 #include <QFinalState>
 #include <QDebug>
-
+#include <QTime>
 #include <hbmainwindow.h>
 
 
@@ -98,7 +98,9 @@ void FtuDefaultRuntime::createContentServiceParts()
 void FtuDefaultRuntime::createGuiServiceParts()
 {
     mWindow = new HbMainWindow();
+    QDEBUG("FtuDefaultRuntime Window created"<<__FUNCTION__<<"~~~~~~~"<<QTime::currentTime().toString("hh:mm:ss.zzz");)
     mWindow->show();
+    QDEBUG("FtuDefaultRuntime Window Shown"<<__FUNCTION__<<"~~~~~~~"<<QTime::currentTime().toString("hh:mm:ss.zzz");)
 }
 
 // ---------------------------------------------------------------------------
@@ -188,14 +190,14 @@ void FtuDefaultRuntime::assignServices()
         foreach (const QVariant& service, services)
         {           
             QString name = service.toString();
-            qDebug() << "Assign service:" << name << "\n to " << state->objectName();
+            QDEBUG("Assign service:" << name << "\n to " << state->objectName();)
             if (name == FTU_CONTENT_SERVICE_KEY) 
             {
                 state->setProperty(name.toAscii().data(), qVariantFromValue(mFtuContentService));
             }
             else 
             {
-                qWarning() << "WARNING: Service " << name << " is unknown";
+                QDEBUG("WARNING: Service " << name << " is unknown";)
             }
         }
     }

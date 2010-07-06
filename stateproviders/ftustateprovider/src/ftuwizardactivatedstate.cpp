@@ -19,6 +19,7 @@
 #include "ftuwizardactivatedstate.h"
 #include "fturuntimeservices_global.h"
 #include "ftucontentservice.h"
+#include "ftustateprovider_global.h"
 #include <ftuwizard.h>
 
 #include <hbmainwindow.h>
@@ -113,7 +114,7 @@ FtuWizardActivatedState::~FtuWizardActivatedState()
 //
 void FtuWizardActivatedState::onEntry(QEvent *event)
 {
-    qDebug() << "ftu:FtuWizardActivatedState::onEntry";
+    QDEBUG("ftu:FtuWizardActivatedState::onEntry";)
     QState::onEntry(event);    
 
     int activeIndex = content()->activeWizard();
@@ -258,7 +259,7 @@ void FtuWizardActivatedState::changeWizardView(FtuWizard *caller,
             // set wizard's widget as current widget
             mWizardStackedWidget->setCurrentWidget(viewWidget);
             
-            qDebug() << "Ftu: switching view due plugin view change";
+            QDEBUG("Ftu: switching view due plugin view change";)
             mainWindow()->setCurrentView(mPluginView, true);
             
             QList<FtuWizard*> wizards = content()->wizards();
