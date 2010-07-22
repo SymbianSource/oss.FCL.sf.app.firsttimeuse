@@ -22,6 +22,7 @@ INCLUDEPATH += ./inc
 
 
 DEFINES += FTUWIZARDPROVIDER_LIB
+#DEFINES += LOGGING
 
 win32 {
     CONFIG(debug, debug|release) {

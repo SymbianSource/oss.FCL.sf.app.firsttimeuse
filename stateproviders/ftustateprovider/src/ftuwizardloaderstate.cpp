@@ -24,7 +24,7 @@
 #include "ftutest_global.h"
 #include "ftustatecenrephandler.h"
 #include <QDebug>
-
+#include <QTime>
 // ---------------------------------------------------------------------------
 // FtuWizardLoaderState::FtuWizardLoaderState
 // ---------------------------------------------------------------------------
@@ -51,7 +51,7 @@ FtuWizardLoaderState::~FtuWizardLoaderState()
 void FtuWizardLoaderState::addWizard(FtuWizard* wizard, bool success)
 {
     if(NULL!=wizard) {
-        qDebug() << "Wizard " << wizard->objectName() << " initialized with " << success;
+        QDEBUG("Wizard " << wizard->objectName() << " initialized with " << success;)
      }
     else {
        qFatal("void FtuWizardLoaderState::addWizard(FtuWizard* wizard, bool success): Null pointer argument wizard");
@@ -65,6 +65,7 @@ void FtuWizardLoaderState::addWizard(FtuWizard* wizard, bool success)
         disconnect(wizard, SIGNAL(wizardInitialized(FtuWizard*, bool)),
                    this, SLOT(addWizard(FtuWizard*, bool)));
     }
+    QDEBUG("FtuWizardLoaderState.cpp"<<__FUNCTION__<<"~~~~~~~"<<QTime::currentTime().toString("hh:mm:ss.zzz");)
 }
 
 // ---------------------------------------------------------------------------

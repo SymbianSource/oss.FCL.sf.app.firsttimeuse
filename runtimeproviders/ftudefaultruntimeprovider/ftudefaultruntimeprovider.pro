@@ -16,7 +16,6 @@
 
 TEMPLATE = lib
 
-
 symbian {
     CONFIG(debug, debug|release) {
         DESTDIR = debug
@@ -48,6 +47,7 @@ MOBILITY = serviceframework
 QT += xml sql
 
 DEFINES += FTUDEFAULTRUNTIMEPROVIDER_LIB
+#DEFINES += LOGGING
 
 coverage:DEFINES += COVERAGE_MEASUREMENT
 

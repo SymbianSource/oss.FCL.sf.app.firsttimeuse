@@ -21,7 +21,7 @@
 #include "ftuwizardmenustate.h"
 #include "ftuwizardloaderstate.h"
 #include "ftuwizardactivatedstate.h"
-
+#include "ftustateprovider_global.h"
 #include <QState>
 #include <QDebug>
 
@@ -57,7 +57,7 @@ QState* FtuStateProviderPrivate::createState(const QString& uri)
         return new FtuWizardActivatedState();
     }
     else {
-        qDebug() << "FTU: No state found for uri: " << uri;
+        QDEBUG("FTU: No state found for uri: " << uri;)
         return NULL;
     }
 }

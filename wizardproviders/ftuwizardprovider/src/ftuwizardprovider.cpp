@@ -18,7 +18,7 @@
 
 #include "ftuwizardprovider.h"
 #include "ftumanifestparser.h"
-
+#include "ftuwizardprovider_global.h"
 #include <ftuwizardfactory.h>
 
 #include <QDebug>
@@ -109,8 +109,8 @@ void FtuWizardProvider::loadFTUPlugins(QList<FtuWizardFactory*>& plugins)
     
     if(ok)
     {
-        qDebug() << "Ftu:reading config for " << numberOfPlugins 
-                 << " plugins";
+        QDEBUG("Ftu:reading config for " << numberOfPlugins 
+                 << " plugins";)
         
         
         for(int i=1; i <= numberOfPlugins ; ++i)
@@ -121,7 +121,7 @@ void FtuWizardProvider::loadFTUPlugins(QList<FtuWizardFactory*>& plugins)
             
             QString interface = settingsManager.readItemValue(fileKey,
                                     XQSettingsManager::TypeString).toString();
-            qDebug() << "Ftu:Reading interface name from conf :" << interface;
+            QDEBUG("Ftu:Reading interface name from conf :" << interface;)
             QObject* obj = serviceManager->loadInterface(interface);
             if(obj)
             {
@@ -140,17 +140,17 @@ void FtuWizardProvider::loadFTUPlugins(QList<FtuWizardFactory*>& plugins)
 #else
     foreach (QString filename, pluginList) 
     {
-        qDebug () << "Ftu: Loading instance from : "<< filename;
+        QDEBUG("Ftu: Loading instance from : "<< filename;)
         QPluginLoader loader(pluginsDir.absoluteFilePath(filename));
         QObject* instance = loader.instance();
         if(instance)
         {
-            qDebug() << "ftu: instance loaded";
+            QDEBUG("ftu: instance loaded";)
             FtuWizardFactory* factory = qobject_cast<FtuWizardFactory*>
                                                     (instance);
             if(factory)
             {
-                qDebug() << "ftu: appending factory to list";
+                QDEBUG("ftu: appending factory to list";)
                 plugins.append(factory);
             }
         }

@@ -54,8 +54,8 @@
   <data>
     <KCrUidFtuWizardProvider>
       <KFtuNumberOfWizardPlugins>2</KFtuNumberOfWizardPlugins>
-      <KFtuWizardPluginPlaceholder1>ftudatetimewizard.manifest</KFtuWizardPluginPlaceholder1>
-      <KFtuWizardPluginPlaceholder2>dataimportftuwizard.manifest</KFtuWizardPluginPlaceholder2>
+      <KFtuWizardPluginPlaceholder1>dataimportftuwizard.manifest</KFtuWizardPluginPlaceholder1>
+      <KFtuWizardPluginPlaceholder2>ftuemailwizardplugin.manifest</KFtuWizardPluginPlaceholder2>
       <KFtuWizardPluginPlaceholder3></KFtuWizardPluginPlaceholder3>
       <KFtuWizardPluginPlaceholder4></KFtuWizardPluginPlaceholder4>
       <KFtuWizardPluginPlaceholder5></KFtuWizardPluginPlaceholder5>

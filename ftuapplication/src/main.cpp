@@ -23,6 +23,8 @@
 #include <hbapplication.h>
 #include <QTranslator>
 #include <QLocale>
+#include <QTime>
+#include <QDebug>
 
 // ---------------------------------------------------------------------------
 // main
@@ -30,6 +32,7 @@
 //
 int main(int argc, char *argv[])
 {
+    QDEBUG(__FILE__<<__FUNCTION__<<"~~~~~~~"<<QTime::currentTime().toString("hh:mm:ss.zzz");)
     FTUTEST_FUNC_ENTRY("FTU::FtuFirstTimeUse::main");
     
     HbApplication app(argc, argv);    
@@ -64,12 +67,14 @@ int main(int argc, char *argv[])
     QDir::setCurrent("Z:/");    
 #else
     QDir::setCurrent("C:/");
-    FTUDEBUG("main() - FtuApplication's current dir set to C:/");
+    QDEBUG("main() - FtuApplication's current dir set to C:/");
 #endif //ROM
     QObject::connect(&app,SIGNAL(aboutToQuit()),&ftuFirstTimeUse,SLOT(stop()));
     QObject::connect(&ftuFirstTimeUse, SIGNAL(exit()), &app, SLOT(quit()),Qt::QueuedConnection);    
     ftuFirstTimeUse.start();
     int ret = app.exec();
-    FTUTEST_FUNC_EXIT("FTU::FtuFirstTimeUse::main");
+    QDEBUG("FTU::FtuFirstTimeUse::main");
+    //Work around to make sure that ftu exits
+    User::Exit(0);
     return ret;       
 }
