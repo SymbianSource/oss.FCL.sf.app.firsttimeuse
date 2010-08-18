@@ -36,6 +36,7 @@
 #include <QGraphicsWidget>
 #include <QDir>
 #include <hbmenu.h>
+#include <HbTranslator>
 
 
 const char *FTUSTATEPROVIDER_DOCML2 = ":/xml/ftustateprovider.docml";
@@ -68,12 +69,13 @@ FtuWizardActivatedState::FtuWizardActivatedState(QState *parent) :
     mWizardStackedWidget(NULL),
     mBackAction(NULL),
     mPreviousView(NULL), 
-    mCurrentView(NULL)
+    mCurrentView(NULL),
+    mTranslator(NULL)
 {
     mMainWindow = hbInstance->allMainWindows().at(0);
     mDocumentLoader = new HbDocumentLoader();
     mPluginView = new HbView();
-
+	mTranslator = new HbTranslator("/resource/qt/translations/","firsttimesetup");
     bool ok = false;
 	mDocumentLoader->load(FTUSTATEPROVIDER_DOCML2, &ok);
 	QGraphicsWidget *widget = mDocumentLoader->findWidget(WIZARD_VIEW);
@@ -82,7 +84,7 @@ FtuWizardActivatedState::FtuWizardActivatedState(QState *parent) :
     mPluginView->setWidget(widget);
     mMainWindow->addView(mPluginView);
 
-    mPluginView->setTitle(qtTrId("txt_ftu_title_setup"));
+    mPluginView->setTitle(hbTrId("txt_ftu_title_setup"));
 
     mPluginTitleLabel = qobject_cast<HbLabel *>(mDocumentLoader->findWidget(WIZARD_INFOTEXT_LABEL)); 
 
@@ -106,6 +108,10 @@ FtuWizardActivatedState::~FtuWizardActivatedState()
 	{		
 		delete mBackAction;
 	}
+	if(mTranslator){
+        delete mTranslator;
+        mTranslator = NULL;
+    }
 }
 
 // ---------------------------------------------------------------------------

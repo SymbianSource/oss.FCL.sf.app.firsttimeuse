@@ -21,7 +21,7 @@
 
 #include <QtGui>
 #include <hbapplication.h>
-#include <QTranslator>
+#include <HbTranslator>
 #include <QLocale>
 #include <QTime>
 #include <QDebug>
@@ -37,31 +37,9 @@ int main(int argc, char *argv[])
     
     HbApplication app(argc, argv);    
 
-    QTranslator translator;
     
-    QString translation = "ftu_";
-    if(argc > 1){
-        translation.append(argv[1]);
-    }
-    else{
-        // another option to load locale could be QLocale::system().language())
-        translation.append(QLocale::system().name()); // this seems to be ftu_en_US in Windows and ftu_en_GB in WINSCW emulator and hardware
-    }
-    translator.load(translation, ":/translations" );
-    app.installTranslator(&translator);
-
-    QString exampleWizardsTranslation = "ftuexamplewizards_";
-    if(argc > 1){
-        exampleWizardsTranslation.append(argv[1]);
-    }
-    else{
-        exampleWizardsTranslation.append(QLocale::system().name());
-    }
-    QTranslator exampleWizardsTranslator;
-
-    exampleWizardsTranslator.load(exampleWizardsTranslation, ":/translations" );
-    app.installTranslator(&exampleWizardsTranslator);
-
+    HbTranslator *translator = new HbTranslator("/resource/qt/translations/","firsttimesetup");
+    
     FtuFirstTimeUse ftuFirstTimeUse;
 #ifdef ROM
     QDir::setCurrent("Z:/");    
@@ -76,5 +54,6 @@ int main(int argc, char *argv[])
     QDEBUG("FTU::FtuFirstTimeUse::main");
     //Work around to make sure that ftu exits
     User::Exit(0);
+    delete translator;
     return ret;       
 }

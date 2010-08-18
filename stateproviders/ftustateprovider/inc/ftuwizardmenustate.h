@@ -37,6 +37,7 @@ class FtuWizard;
 class HbAction;
 class FtuStateCenrepHandler;
 class HbMenu;
+class HbTranslator;
 
 /** @ingroup group_ftustateprovider
  * @brief The state where wizard menu is shown
@@ -144,7 +145,7 @@ private:
 
     FtuStateCenrepHandler*                  mCenrepHandler;
     QList<bool>                             mCompletedWizardList;
-
+    HbTranslator                            *mTranslator;
     FTU_TEST_FRIEND_CLASS(FtuStateProviderTest)
 };
 

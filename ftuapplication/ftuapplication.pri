@@ -17,4 +17,4 @@
 HEADERS += ./inc/*.h
 SOURCES += ./src/*.cpp
 
-RESOURCES += ../translations/translations.qrc
+

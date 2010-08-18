@@ -27,6 +27,7 @@
 #include <hbinstance.h>
 #include <hblistview.h>
 #include <hbdocumentloader.h>
+#include <HbTranslator>
 
 #include <QStandardItemModel>
 #include <QDate>
@@ -55,11 +56,12 @@ FtuWizardMenuState::FtuWizardMenuState(QState *parent) :
     mInfoText(NULL),
     mListView(NULL),
 	mDocumentLoader(NULL),
-    mModel(NULL)
+    mModel(NULL),
+    mTranslator(NULL)
 {
     mMainWindow = hbInstance->allMainWindows().at(0);
     mModel = new QStandardItemModel(this);
-    
+    mTranslator = new HbTranslator("/resource/qt/translations/","firsttimesetup");  
     mDocumentLoader = new HbDocumentLoader();
 	bool ok = false;
 	mDocumentLoader->load(FTUSTATEPROVIDER_DOCML, &ok);
@@ -67,7 +69,7 @@ FtuWizardMenuState::FtuWizardMenuState(QState *parent) :
 	Q_ASSERT_X(ok && (widget != 0), "ftustateprovider", "invalid DocML file");
 	mTocView = qobject_cast<HbView*>(widget);
 
-	mTocView->setTitle(qtTrId("txt_long_caption_FTU_widget"));
+	mTocView->setTitle(hbTrId("txt_long_caption_FTU_widget"));
 
 	mMainWindow->addView(mTocView);
     // Set as initial view.
@@ -92,6 +94,10 @@ FtuWizardMenuState::~FtuWizardMenuState()
 	}
 	delete mDocumentLoader;
 	delete mCenrepHandler;
+	if(mTranslator){
+        delete mTranslator;
+        mTranslator = NULL;
+	}
 }
 
 // ---------------------------------------------------------------------------
@@ -232,7 +238,7 @@ void FtuWizardMenuState::createTocList()
 void FtuWizardMenuState::createInfoText()
 {
     mInfoText = qobject_cast<HbLabel *>(mDocumentLoader->findWidget(TOC_INFOTEXT_LABEL));                               
-    mInfoText->setPlainText(qtTrId("txt_ftu_subhead_select_setting_you_want_to_edit"));
+    mInfoText->setPlainText(hbTrId("txt_ftu_subhead_select_setting_you_want_to_edit"));
 }
 
 // ---------------------------------------------------------------------------
@@ -278,14 +284,14 @@ void FtuWizardMenuState::updateProgress(FtuWizard *caller, bool show,
         QList<QVariant> iconList;
         HbIcon icon (wizards[index]->wizardSettings().mTocDefaultIcon.filePath());
         iconList.append(icon);
-        HbIcon rightIcon(QString(qtTrId("qtg_small_tick")));
+        HbIcon rightIcon(QString("qtg_small_tick"));
         
         if(progress < progressCompelete)
         {
             QString progressStr;
             QString progressNumber;
             progressNumber.setNum(progress);
-            progressStr = qtTrId("txt_ftu_list_progress_status").arg(progressNumber);
+            progressStr = hbTrId("txt_ftu_list_progress_status").arg(progressNumber);
             data << progressStr;
         }
         else

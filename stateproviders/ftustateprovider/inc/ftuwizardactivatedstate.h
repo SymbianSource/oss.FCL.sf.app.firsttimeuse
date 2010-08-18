@@ -37,6 +37,7 @@ class QGraphicsLinearLayout;
 class FtuContentService;
 class FtuWizard;
 class HbMenu;
+class HbTranslator;
  
 /** @ingroup group_ftustateprovider
  * @brief The state handles wizard activation and interaction.
@@ -200,6 +201,7 @@ private:
      */
     QGraphicsWidget*        mCurrentView;
 
+    HbTranslator            *mTranslator;
     
     FTU_TEST_FRIEND_CLASS(FtuStateProviderTest)    
 };

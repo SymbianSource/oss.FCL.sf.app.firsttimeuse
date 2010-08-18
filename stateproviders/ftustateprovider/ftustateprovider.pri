@@ -18,3 +18,5 @@ HEADERS += ./inc/*.h
 SOURCES += ./src/*.cpp
 
 RESOURCES += resources/resources.qrc
+
+DOCML += resources/ftustateprovider.docml
