@@ -86,3 +86,6 @@ symbian: plugin{
     for(qtplugin, qtplugins.sources):BLD_INF_RULES.prj_exports += "./$$qtplugin z:$$qtplugins.path/$$basename(qtplugin)"
 
 }
+
+
+symbian:MMP_RULES += SMPSAFE

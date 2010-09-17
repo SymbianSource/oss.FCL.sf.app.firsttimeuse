@@ -65,4 +65,7 @@ symbian {
 include(ftuwizardprovider.pri)
 
 #ONLY FOR DEVELOPMENT! REMOVE THIS BEFORE EACH HS_Domain RELEASE!
-symbian: MMP_RULES += EXPORTUNFROZEN
+
+
+
+symbian:MMP_RULES += SMPSAFE

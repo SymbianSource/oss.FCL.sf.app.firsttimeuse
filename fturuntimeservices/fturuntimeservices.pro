@@ -63,8 +63,11 @@ LIBS += -lefsrv -lcharconv -lws32 -lhal -lgdi -lapgrfx
 win32 {
 }
 include(fturuntimeservices.pri)
-system(copy /y .\inc\fturuntimeservices_global.h ..\inc)
-system(copy /y .\inc\ftucontentservice.h ..\inc)
+system(copy /y .\\inc\\fturuntimeservices_global.h ..\\inc)
+system(copy /y .\\inc\\ftucontentservice.h ..\\inc)
 
 #ONLY FOR DEVELOPMENT! REMOVE THIS BEFORE EACH HS_Domain RELEASE!
-symbian: MMP_RULES += EXPORTUNFROZEN
+
+
+
+symbian:MMP_RULES += SMPSAFE

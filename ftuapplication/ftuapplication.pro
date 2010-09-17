@@ -57,11 +57,9 @@ symbian {
     ICON = resources/ftu_app_icon.svg
     icon.sources = resources/ftu_app_icon.svg
     icon.path = /fturesources
-    addFiles.sources +=  ../translations/ftu_en_US.qm ../translations/ftu_en_GB.qm \
-                         ../translations/ftuexamplewizards_en_US.qm ../translations/ftuexamplewizards_en_GB.qm
-    addFiles.path = translations   
-    DEPLOYMENT += icon addFiles
-
+   
+    DEPLOYMENT += icon
+ 
     LIBS += -lxqsettingsmanager 
     RSS_RULES += "hidden = KAppIsHidden;"
 
@@ -76,3 +74,6 @@ include(ftuapplication_installs_win32.pri)
 }
 
 include(ftuapplication.pri)
+
+
+symbian:MMP_RULES += SMPSAFE

@@ -84,7 +84,7 @@ FtuWizardActivatedState::FtuWizardActivatedState(QState *parent) :
     mPluginView->setWidget(widget);
     mMainWindow->addView(mPluginView);
 
-    mPluginView->setTitle(hbTrId("txt_ftu_title_setup"));
+    mPluginView->setTitle(hbTrId("txt_long_caption_FTU_widget"));
 
     mPluginTitleLabel = qobject_cast<HbLabel *>(mDocumentLoader->findWidget(WIZARD_INFOTEXT_LABEL)); 
 

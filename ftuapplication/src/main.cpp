@@ -52,8 +52,6 @@ int main(int argc, char *argv[])
     ftuFirstTimeUse.start();
     int ret = app.exec();
     QDEBUG("FTU::FtuFirstTimeUse::main");
-    //Work around to make sure that ftu exits
-    User::Exit(0);
     delete translator;
     return ret;       
 }

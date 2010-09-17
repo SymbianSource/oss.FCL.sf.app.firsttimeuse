@@ -31,3 +31,5 @@ tests:SUBDIRS += fturuntimeservices\tsrc\t_fturuntimeservices
 CONFIG += ordered
 
 symbian:include(ftu_exports_to_rom.pri)
+
+symbian:MMP_RULES += SMPSAFE
