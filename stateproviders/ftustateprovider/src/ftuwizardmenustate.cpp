@@ -28,6 +28,8 @@
 #include <hblistview.h>
 #include <hbdocumentloader.h>
 #include <HbTranslator>
+#include <HbGroupBox>
+#include <HbListViewItem>
 
 #include <QStandardItemModel>
 #include <QDate>
@@ -79,7 +81,7 @@ FtuWizardMenuState::FtuWizardMenuState(QState *parent) :
     for(int counter = 0; counter < registeredPlugins; counter ++){
         mCompletedWizardList << mCenrepHandler->getPluginInfo(counter);
     }
-        
+    connect(mMainWindow, SIGNAL(orientationChanged(Qt::Orientation)), this, SLOT(changeListStrechingStyle(Qt::Orientation)));
 }
 
 // ---------------------------------------------------------------------------
@@ -183,6 +185,10 @@ void FtuWizardMenuState::addWizardToListModel(int aIndex)
         connect(addedWizard, SIGNAL(progressUpdated(FtuWizard *, bool, int)), 
                 this, SLOT(updateProgress(FtuWizard *, bool, int)));
 
+        connect(addedWizard, SIGNAL(wizardSettingsChanged(FtuWizard*)), 
+                        this, SLOT(changeWizardSettings(FtuWizard*)));
+        
+        
         const FtuWizardSetting& settings = addedWizard->wizardSettings();
         QStandardItem* newItem = new QStandardItem();
         QList<QVariant> iconList;
@@ -192,17 +198,14 @@ void FtuWizardMenuState::addWizardToListModel(int aIndex)
         
         QStringList data;
         data << settings.mTocLabel;
+        data << settings.mTocSecondaryLabel;
         QDate date = addedWizard->wizardCompletedDate();
-        if(date.isNull())
-        {
-            data << emptyLine;
-        }
-        else
+        if(!date.isNull())
         {
             //Plugin has already completed, Append tick mark on right side
             iconList.append(rightIcon);
-            data << updatedAsString(date);
         }
+        
 
         newItem->setData(iconList, Qt::DecorationRole);
         newItem->setData(QVariant(data), Qt::DisplayRole);
@@ -237,8 +240,8 @@ void FtuWizardMenuState::createTocList()
 //
 void FtuWizardMenuState::createInfoText()
 {
-    mInfoText = qobject_cast<HbLabel *>(mDocumentLoader->findWidget(TOC_INFOTEXT_LABEL));                               
-    mInfoText->setPlainText(hbTrId("txt_ftu_subhead_select_setting_you_want_to_edit"));
+    mInfoText = qobject_cast<HbGroupBox *>(mDocumentLoader->findWidget(TOC_INFOTEXT_LABEL));                               
+    mInfoText->setHeading(hbTrId("txt_ftu_subhead_select_setting_you_want_to_edit"));
 }
 
 // ---------------------------------------------------------------------------
@@ -288,17 +291,11 @@ void FtuWizardMenuState::updateProgress(FtuWizard *caller, bool show,
         
         if(progress < progressCompelete)
         {
-            QString progressStr;
-            QString progressNumber;
-            progressNumber.setNum(progress);
-            progressStr = hbTrId("txt_ftu_list_progress_status").arg(progressNumber);
-            data << progressStr;
+            data << wizards[index]->wizardSettings().mTocSecondaryLabel;
         }
         else
-        {         
-            QDate date = wizards[index]->wizardCompletedDate();
-            data << updatedAsString(date);
-
+        {   
+            data << wizards[index]->wizardSettings().mTocSecondaryLabel;
             //Plugin has completed 100%, Append tick mark on right side
             iconList.append(rightIcon);
 
@@ -315,3 +312,58 @@ void FtuWizardMenuState::updateProgress(FtuWizard *caller, bool show,
         mModel->item(index)->setData(iconList, Qt::DecorationRole);
     }
 }
+
+// ---------------------------------------------------------------------------
+// FtuWizardMenuState::changeWizardSettings
+// ---------------------------------------------------------------------------
+//
+void FtuWizardMenuState::changeWizardSettings(FtuWizard* caller)
+    {
+    QList<FtuWizard*> wizards = content()->wizards();
+        int index = -1;
+        
+        // Get the index of the wizard
+        for(int i = 0 ; i < wizards.size() ; ++i)
+        {
+            if(caller == wizards[i])
+            {
+                QDEBUG("::changeWizardSettings wizard found at: " << i;)
+                index = i;
+            }
+        }
+        if(index != -1)
+        {
+
+            QStringList data;
+            data << wizards[index]->wizardSettings().mTocLabel;
+            data << wizards[index]->wizardSettings().mTocSecondaryLabel;
+            QList<QVariant> iconList;
+            HbIcon icon (wizards[index]->wizardSettings().mTocDefaultIcon.filePath());
+            iconList.append(icon);
+            HbIcon rightIcon(QString("qtg_small_tick")); 
+            if(true == mCompletedWizardList[index])
+                {
+                iconList.append(rightIcon);
+                }
+            mModel->item(index)->setData(QVariant(data), Qt::DisplayRole);
+            mModel->item(index)->setData(iconList, Qt::DecorationRole);
+        }
+    }
+
+// ---------------------------------------------------------------------------
+// FtuWizardMenuState::changeListStrechingStyle
+// ---------------------------------------------------------------------------
+//
+void FtuWizardMenuState::changeListStrechingStyle(Qt::Orientation orientation)
+{
+    HbListViewItem *prototypeItem = mListView->listItemPrototype();
+    if (orientation == Qt::Vertical) {
+        // change the streching style of list to no strech
+        prototypeItem->setStretchingStyle(HbListViewItem::NoStretching );
+        
+    } else if (orientation == Qt::Horizontal) {
+        // change the streching style of list to landscape strech
+        prototypeItem->setStretchingStyle(HbListViewItem::StretchLandscape);
+    }
+}
+

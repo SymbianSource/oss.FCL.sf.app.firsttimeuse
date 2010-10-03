@@ -22,6 +22,7 @@
 #include <QAbstractItemModel>
 #include <QState>
 #include "ftutest_global.h"
+#include <ftuwizard.h>
 
 FTU_TEST_CLASS(FtuStateProviderTest)
 
@@ -38,6 +39,7 @@ class HbAction;
 class FtuStateCenrepHandler;
 class HbMenu;
 class HbTranslator;
+class HbGroupBox;
 
 /** @ingroup group_ftustateprovider
  * @brief The state where wizard menu is shown
@@ -124,6 +126,15 @@ public slots:
      */    
     void updateProgress(FtuWizard *caller, bool show, int progress);
     
+	/**
+     * Signalled when user changes WizardSettings
+     */
+    void changeWizardSettings(FtuWizard *caller);
+    
+    /**
+     * changes the streching style of the list
+     */
+    void changeListStrechingStyle(Qt::Orientation);    
 signals:
 
     /**
@@ -136,7 +147,7 @@ private:
 
     HbMainWindow*                           mMainWindow;
     HbView*                                 mTocView;
-    HbLabel*                                mInfoText;
+    HbGroupBox*                             mInfoText;
     HbListView*                             mListView;    
     HbDocumentLoader*                       mDocumentLoader;
 

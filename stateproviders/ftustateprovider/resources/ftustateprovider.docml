@@ -2,25 +2,21 @@
 <hbdocument version="1.1">
     <widget name="tocView" type="HbView">
         <widget name="content" role="HbView:widget" type="HbWidget">
-            <widget name="tocInfoTextLabel" type="HbLabel">
-                <real name="z" value="1"/>
-                <sizepolicy horizontalPolicy="Preferred" horizontalStretch="0" verticalPolicy="Preferred" verticalStretch="0"/>
-                <sizehint height="5un" type="PREFERRED" width="45.97015un"/>
-            </widget>
             <widget name="tocListView" type="HbListView">
                 <real name="z" value="2"/>
                 <sizepolicy horizontalPolicy="Expanding" horizontalStretch="0" verticalPolicy="Expanding" verticalStretch="0"/>
                 <sizehint height="81.04478un" type="PREFERRED" width="51.64179un"/>
             </widget>
+            <widget name="tocInfoTextLabel" type="HbGroupBox">
+                <sizehint type="PREFERRED" width="25un"/>
+                <sizehint height="4.7un" type="MINIMUM"/>
+                <bool name="collapsable" value="FALSE"/>
+                <string name="heading"/>
+            </widget>
             <real name="z" value="0"/>
-            <layout type="anchor">
-                <anchoritem dst="tocInfoTextLabel" dstEdge="LEFT" spacing="1un" src="" srcEdge="LEFT"/>
-                <anchoritem dst="tocInfoTextLabel" dstEdge="TOP" spacing="1un" src="" srcEdge="TOP"/>
-                <anchoritem dst="tocInfoTextLabel" dstEdge="RIGHT" spacing="-1un" src="" srcEdge="RIGHT"/>
-                <anchoritem dst="tocListView" dstEdge="LEFT" spacing="1un" src="" srcEdge="LEFT"/>
-                <anchoritem dst="tocListView" dstEdge="TOP" spacing="6un" src="" srcEdge="TOP"/>
-                <anchoritem dst="tocListView" dstEdge="RIGHT" spacing="-1un" src="" srcEdge="RIGHT"/>
-                <anchoritem dst="tocListView" dstEdge="BOTTOM" spacing="-1un" src="" srcEdge="BOTTOM"/>
+            <layout orientation="Vertical" type="linear">
+                <linearitem itemname="tocInfoTextLabel"/>
+                <linearitem itemname="tocListView"/>
             </layout>
         </widget>
     </widget>
